@@ -1,11 +1,12 @@
 {
   "author": "Stephen Blankenship",
+  "contributors": ["Jesse Varnado <jesse.varnado@gmail.com>", "Stephen Blankenship"],
   "name": "coffee-machine",
   "description": "A simple state machine written in CoffeeScript.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
-    "url": "git://github.com/stephenb/coffee-machine.git"
+    "url": "git://github.com/jessevarnado/coffee-machine.git"
   },
   "main": "./lib/coffee_machine",
   "scripts": {
@@ -23,7 +24,7 @@
     "grunt-contrib-uglify": "~0.2.4",
     "grunt": "~0.4.1",
     "grunt-contrib-watch": "~0.5.3",
-    "vows": "~v0.5.8",
+    "vows": "~v0.8.1",
     "grunt-vows-runner": "~0.6.0",
     "coffee-script": "~1.6.3"
   }
