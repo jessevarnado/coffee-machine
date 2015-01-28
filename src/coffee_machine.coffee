@@ -34,13 +34,13 @@ root.CoffeeMachine = class CoffeeMachine
         break
     else if activeStates.length > 1
       # Set only the 1st active state to active
-      for own state in activeStates
+      for own state of activeStates
         continue if state is activeStates[0]
         stateDef.active = false
     # Define the event methods
     for event, eventDef of @stateMachine.events
       do(event, eventDef) =>
-        this[event] = -> this.changeState(eventDef.from, eventDef.to, event)
+        this[event] = -> this.changeState.apply(this, [eventDef.from, eventDef.to, event, arguments...])
   
   currentState: ->
     (state for own state, stateDef of @stateMachine.states when stateDef.active)[0]
@@ -51,7 +51,7 @@ root.CoffeeMachine = class CoffeeMachine
   availableEvents: ->
     event for own event of @stateMachine.events
     
-  changeState: (from, to, event=null) ->
+  changeState: (from, to, event=null, data...) ->
     # If from is an array, and it contains the currentState, set from to currentState
     if from.constructor.toString().indexOf('Array') isnt -1
       if from.indexOf(this.currentState()) isnt -1
@@ -71,11 +71,11 @@ root.CoffeeMachine = class CoffeeMachine
     {onEnter: enterMethod, guard: guardMethod} = toStateDef
     {onExit: exitMethod} = fromStateDef
     
-    args = {from: from, to: to, event: event}
-    return false if guardMethod isnt undefined and guardMethod.call(this, args) is false
-    exitMethod.call(this, args) if exitMethod isnt undefined
-    enterMethod.call(this, args) if enterMethod isnt undefined
-    @stateMachine.onStateChange.call(this, args) if @stateMachine.onStateChange isnt undefined
+    transition = {from: from, to: to, event: event}
+    args = [transition, data...]
+    return false if guardMethod isnt undefined and guardMethod.apply(this, args) is false
+    exitMethod.apply(this, args) if exitMethod isnt undefined
+    enterMethod.apply(this, args) if enterMethod isnt undefined
+    @stateMachine.onStateChange.apply(this, args) if @stateMachine.onStateChange isnt undefined
     fromStateDef.active = false
     toStateDef.active = true
-    
