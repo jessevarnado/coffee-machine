@@ -1,0 +1,21 @@
+{
+  "name": "coffee-machine-bower",
+  "version": "0.0.4",
+  "homepage": "https://github.com/jessevarnado/coffee-machine-bower",
+  "authors": ["Jesse Varnado <jesse.varnado@gmail.com>", "Stephen Blankenship"],
+  "description": "A simple state machine written in CoffeeScript.",
+  "main": "./lib/coffee_machine.js",
+  "keywords": [
+    "client-side",
+    "state-machine",
+    "coffee-state-machine"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
