@@ -201,6 +201,6 @@ vow.addBatch
         topic.state2or3toState1()
         assert.equal 1, 2  # hrmmm... don't know how to test the error well
       catch e
-        assert.equal e, "Cannot change from states state2 or state3; none are the active state!"
+        assert.equal e, "Invalid state change! Event state2or3toState1 is incompatible with state state1"
 
 exports.test_utils = vow

@@ -16,7 +16,7 @@ root = exports ? window
 root.CoffeeMachine = class CoffeeMachine
 
   constructor: (@stateMachine = {states:{}, events:{}}) ->
-    this.defineStateMachine(@stateMachine)
+    @defineStateMachine(@stateMachine)
   
   defineStateMachine: (@stateMachine = {states:{}, events:{}}) ->
     # If array setup was used, translate it into the object setup
@@ -40,7 +40,7 @@ root.CoffeeMachine = class CoffeeMachine
     # Define the event methods
     for event, eventDef of @stateMachine.events
       do(event, eventDef) =>
-        this[event] = -> this.changeState.apply(this, [eventDef.from, eventDef.to, event, arguments...])
+        @[event] = -> @changeState.apply(@, [eventDef.from, eventDef.to, event, arguments...])
   
   currentState: ->
     (state for own state, stateDef of @stateMachine.states when stateDef.active)[0]
@@ -54,12 +54,13 @@ root.CoffeeMachine = class CoffeeMachine
   changeState: (from, to, event=null, data...) ->
     # If from is an array, and it contains the currentState, set from to currentState
     if from.constructor.toString().indexOf('Array') isnt -1
-      if from.indexOf(this.currentState()) isnt -1
-        from = this.currentState()
+      if from.indexOf(@currentState()) isnt -1
+        from = @currentState()
       else
-        throw "Cannot change from states #{from.join(' or ')}; none are the active state!"
+        throw "Invalid state change! Event #{event} is incompatible with state #{@currentState()}"
+
     # If using 'any', then set the from to whatever the current state is
-    if from is 'any' then from = this.currentState()
+    if from is 'any' then from = @currentState()
     
     fromStateDef = @stateMachine.states[from]
     toStateDef = @stateMachine.states[to]
@@ -73,9 +74,9 @@ root.CoffeeMachine = class CoffeeMachine
     
     transition = {from: from, to: to, event: event}
     args = [transition, data...]
-    return false if guardMethod isnt undefined and guardMethod.apply(this, args) is false
-    exitMethod.apply(this, args) if exitMethod isnt undefined
-    enterMethod.apply(this, args) if enterMethod isnt undefined
-    @stateMachine.onStateChange.apply(this, args) if @stateMachine.onStateChange isnt undefined
+    return false if guardMethod isnt undefined and guardMethod.apply(@, args) is false
+    exitMethod.apply(@, args) if exitMethod isnt undefined
+    enterMethod.apply(@, args) if enterMethod isnt undefined
+    @stateMachine.onStateChange.apply(@, args) if @stateMachine.onStateChange isnt undefined
     fromStateDef.active = false
     toStateDef.active = true
